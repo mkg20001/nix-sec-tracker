@@ -14,7 +14,7 @@ async function api (page, id) {
     params.page = page
   }
 
-  const url = `https://api.github.com/repos/nixos/nixpkgs/pulls${id ? '/id' : String(new URLSearchParams(params))}`
+  const url = `https://api.github.com/repos/nixos/nixpkgs/pulls${id ? '/id' : '?' + String(new URLSearchParams(params))}`
 
   console.log('GET %s', url)
   const res = await fetch(url)
@@ -125,7 +125,7 @@ async function pull () {
 async function reindexOpenPRs () {
   const newOpenPRs = []
 
-  const openPRs = await storage.getItem('openPRs')
+  const openPRs = await storage.getItem('openPRs') || []
   for (let i = 0; i < openPRs.length; i++) {
     const id = openPRs[i]
     const { res: pr } = await api(null, id)
